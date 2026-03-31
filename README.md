@@ -2,6 +2,15 @@
 
 Website ini digunakan untuk melacak dan mengelola data alumni secara efektif oleh administrator.
 
+## Teknologi yang Digunakan
+
+- **Backend**: Laravel 10 / PHP 8.1+
+- **Database**: MySQL / MariaDB
+- **Frontend**: Blade Templates, Bootstrap 5
+- **API**: Guzzle HTTP (untuk PDDIKTI)
+- **Auth**: Laravel Sanctum & UI
+- **Build Tools**: Vite, NPM
+
 ## Fitur Utama
 
 - Dashboard admin dengan statistik alumni
