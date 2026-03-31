@@ -1,80 +1,41 @@
 # Website Pelacak Alumni
 
-Website ini dirancang untuk melacak dan mengelola data alumni dengan fitur lengkap untuk administrator.
+Website ini digunakan untuk melacak dan mengelola data alumni secara efektif oleh administrator.
 
 ## Fitur Utama
 
-- **Dashboard Admin**: Overview data alumni dan statistik.
-- **Manajemen Alumni**: Tambah, edit, hapus, dan lihat detail alumni (CRUD).
-- **Autentikasi Aman**: Login dan registrasi admin dengan reset password.
-- **Integrasi PDDIKTI**: Sinkronisasi status alumni dari PDDIKTI.
-- **Tracking Alumni**: Riwayat aktivitas dan pelacakan alumni.
+- Dashboard admin dengan statistik alumni
+- Manajemen alumni lengkap (lihat, tambah, edit, hapus)
+- Autentikasi admin (login, register, reset password)
+- Pelacakan aktivitas alumni
+- Integrasi data PDDIKTI untuk verifikasi status
 
-## Persyaratan Sistem
+## Cara Menggunakan Website
 
-- PHP 8.1+
-- Composer
-- Node.js & NPM
-- MySQL (via XAMPP direkomendasikan)
-- Laravel 11
+### 1. Login Admin
+- Buka `http://localhost:8000/login` (atau URL server Anda)
+- Masukkan email dan password admin
+- Klik "Login"
 
-## Instalasi dan Penggunaan
+### 2. Dashboard
+- Setelah login, otomatis ke `/admin/dashboard`
+- Lihat ringkasan jumlah alumni, tracking, dll.
 
-1. **Clone Repository**:
-   ```
-   git clone https://github.com/akhsanmakky/website-pelacak-alumni.git
-   cd website-pelacak-alumni
-   ```
+### 3. Kelola Alumni
+- Klik menu **Alumni** di sidebar
+- **Lihat Daftar** (`/admin/alumni`): Cari, filter, pagination
+- **Tambah Alumni** (`/admin/alumni/create`): Isi form NIM, nama, angkatan, dll. lalu "Simpan"
+- **Edit Alumni** (`/admin/alumni/{id}/edit`): Ubah data, update PDDIKTI status, "Update"
+- **Detail Alumni** (`/admin/alumni/{id}`): Lihat riwayat tracking
+- **Hapus**: Konfirmasi sebelum hapus
 
-2. **Install Dependencies**:
-   ```
-   composer install
-   npm install
-   ```
+### 4. Logout
+- Klik "Logout" di sidebar
 
-3. **Konfigurasi Environment**:
-   ```
-   cp .env.example .env
-   php artisan key:generate
-   ```
-   Edit `.env` untuk database:
-   ```
-   DB_CONNECTION=mysql
-   DB_HOST=127.0.0.1
-   DB_PORT=3306
-   DB_DATABASE=alumni_tracking
-   DB_USERNAME=root
-   DB_PASSWORD=
-   ```
+### Navigasi
+- Sidebar kiri: Dashboard, Alumni, Logout
+- Setiap aksi punya konfirmasi dan validasi
 
-4. **Setup Database** (pastikan XAMPP MySQL running):
-   ```
-   php artisan migrate
-   php artisan db:seed
-   ```
-
-5. **Build Assets**:
-   ```
-   npm run build
-   ```
-
-6. **Jalankan Aplikasi**:
-   ```
-   php artisan serve
-   ```
-   Atau via XAMPP: place in htdocs, access `http://localhost/website-pelacak-alumni/public`
-
-## Akses Aplikasi
-
-- **Admin Login**: `http://localhost:8000/login` atau `/admin/dashboard`
-- Gunakan kredensial default dari seeder atau buat user baru.
-
-## Halaman Utama
-
-- `/` : Halaman welcome
-- `/admin/alumni` : Daftar alumni
-- `/admin/dashboard` : Dashboard
-
-Untuk kontribusi atau issue, buka pull request atau issue di GitHub.
+Website siap digunakan setelah di-deploy. Hubungi admin untuk akses atau bantuan.
 
 Terima kasih!
