@@ -14,7 +14,8 @@ Website ini digunakan untuk melacak dan mengelola data alumni secara efektif ole
 
 ### 1. Login Admin
 - Buka `http://localhost:8000/login` (atau URL server Anda)
-- Masukkan email dan password admin
+- **Email**: `admin@alumni.com`
+- **Password**: `admin123`
 - Klik "Login"
 
 ### 2. Dashboard
@@ -37,5 +38,7 @@ Website ini digunakan untuk melacak dan mengelola data alumni secara efektif ole
 - Setiap aksi punya konfirmasi dan validasi
 
 Website siap digunakan setelah di-deploy. Hubungi admin untuk akses atau bantuan.
+
+**Catatan Keamanan**: Ganti password default setelah login pertama kali.
 
 Terima kasih!
