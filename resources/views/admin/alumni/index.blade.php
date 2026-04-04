@@ -13,22 +13,97 @@
         </div>
     </div>
 
-    <div class="row mb-4">
-        <div class="col-md-6">
-            <form method="GET" action="{{ route('admin.alumni.index') }}">
-                <div class="row">
-                    <div class="col-md-8">
-                        <input type="text" name="search" class="form-control" placeholder="Cari nama atau NIM..." value="{{ request('search') }}">
-                    </div>
-                    <div class="col-md-4">
-                        <button type="submit" class="btn btn-primary">Cari</button>
-                        <a href="{{ route('admin.alumni.index') }}" class="btn btn-secondary">Reset</a>
+<div class="row mb-4">
+        <!-- Stats Cards -->
+        <div class="col-xl-3 col-md-6 mb-4">
+            <div class="card border-left-primary shadow h-100 py-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">PNS</div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">{{ $stats['pns'] ?? 0 }}</div>
+                        </div>
                     </div>
                 </div>
-            </form>
+            </div>
         </div>
-        <div class="col-md-6 text-end">
-            <a href="{{ route('admin.alumni.create') }}" class="btn btn-success">Tambah Alumni</a>
+        <div class="col-xl-3 col-md-6 mb-4">
+            <div class="card border-left-success shadow h-100 py-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-success text-uppercase mb-1">Swasta</div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">{{ $stats['swasta'] ?? 0 }}</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-xl-3 col-md-6 mb-4">
+            <div class="card border-left-warning shadow h-100 py-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">Wirausaha</div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">{{ $stats['wirausaha'] ?? 0 }}</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-xl-3 col-md-6 mb-4">
+            <div class="card border-left-info shadow h-100 py-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-info text-uppercase mb-1">Total</div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">{{ $stats['total'] ?? 0 }}</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Chart -->
+    <div class="row mb-4">
+        <div class="col-xl-8 col-lg-7">
+            <div class="card shadow mb-4">
+                <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold text-primary">Statistik Alumni</h6>
+                </div>
+                <div class="card-body">
+                    <canvas id="alumniChart" width="100%" height="40"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Search Form -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <form method="GET" action="{{ route('admin.alumni.index') }}" class="row g-3">
+                <div class="col-md-3">
+                    <input type="text" name="search_nama" class="form-control" placeholder="Nama" value="{{ $searchNama ?? '' }}">
+                </div>
+                <div class="col-md-3">
+                    <input type="email" name="search_email" class="form-control" placeholder="Email" value="{{ $searchEmail ?? '' }}">
+                </div>
+                <div class="col-md-3">
+                    <input type="text" name="search_tempat_kerja" class="form-control" placeholder="Tempat Kerja" value="{{ $searchTempatKerja ?? '' }}">
+                </div>
+                <div class="col-md-2">
+                    <input type="text" name="search_posisi" class="form-control" placeholder="Posisi" value="{{ $searchPosisi ?? '' }}">
+                </div>
+                <div class="col-md-1">
+                    <button type="submit" class="btn btn-primary w-100">Cari</button>
+                </div>
+                <div class="col-md-12 text-end">
+                    <a href="{{ route('admin.alumni.index') }}" class="btn btn-secondary me-2">Reset</a>
+                    <a href="{{ route('admin.alumni.export') }}" class="btn btn-success">Export Excel</a>
+                    <a href="{{ route('admin.alumni.create') }}" class="btn btn-info">Tambah Alumni</a>
+                </div>
+            </form>
         </div>
     </div>
 
@@ -58,12 +133,25 @@
                                 <td>{{ $item->tahun_lulus }}</td>
                                 <td>{{ $item->email }}</td>
                                 <td>
-                                    <span class="badge bg-{{ $item->status_karir == 'Bekerja' ? 'success' : ($item->status_karir == 'Wirausaha' ? 'warning' : ($item->status_karir == 'Studi Lanjut' ? 'info' : 'secondary')) }}">
+@php
+                                        $isPns = str_contains(strtolower($item->pekerjaan ?? ''), 'pns');
+                                        if ($isPns) {
+                                            $statusClass = 'primary';
+                                        } elseif ($item->status_karir == 'Wirausaha') {
+                                            $statusClass = 'warning';
+                                        } elseif ($item->status_karir == 'Bekerja') {
+                                            $statusClass = 'success';
+                                        } else {
+                                            $statusClass = 'info';
+                                        }
+                                    @endphp
+                                    <span class="badge bg-{{ $statusClass }}">
                                         {{ $item->status_karir }}
                                     </span>
+
                                 </td>
                                 <td>
-                                    <span class="badge bg-{{ $item->pddikti_status == 'verified' ? 'success' : ($item->pddikti_status == 'pending' ? 'warning' : ($item->pddikti_status == 'not_found' ? 'danger' : 'secondary')) }}">
+<span class="badge bg-{{ $item->pddikti_status == 'verified' ? 'success' : ( $item->pddikti_status == 'pending' ? 'warning' : ( $item->pddikti_status == 'not_found' ? 'danger' : 'secondary' ) ) }}">
                                         {{ ucfirst(str_replace('_', ' ', $item->pddikti_status ?? 'pending')) }}
                                     </span>
                                     <form action="{{ route('admin.alumni.validate', $item) }}" method="POST" class="d-inline mt-1">
@@ -83,7 +171,8 @@
                             </tr>
                         @empty
                             <tr>
-                                <td colspan="7" class="text-center">Tidak ada data alumni.</td>
+                                <td colspan="8" class="text-center">Tidak ada data alumni.</td>
+
                             </tr>
                         @endforelse
                     </tbody>
@@ -93,4 +182,25 @@
         </div>
     </div>
 </div>
+        <script>
+            const ctx = document.getElementById('alumniChart').getContext('2d');
+            const alumniChart = new Chart(ctx, {
+                type: 'pie',
+                data: {
+                    labels: ['PNS', 'Swasta', 'Wirausaha'],
+                    datasets: [{
+                        data: [{{ $stats['pns'] ?? 0 }}, {{ $stats['swasta'] ?? 0 }}, {{ $stats['wirausaha'] ?? 0 }}],
+                        backgroundColor: [
+                            'rgb(0, 123, 255)',
+                            'rgb(40, 167, 69)',
+                            'rgb(255, 193, 7)'
+                        ]
+                    }]
+                },
+                options: {
+                    responsive: true,
+                }
+            });
+        </script>
 @endsection
+

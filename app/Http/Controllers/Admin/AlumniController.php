@@ -6,6 +6,8 @@ use App\Http\Controllers\Controller;
 use App\Models\Alumni;
 use App\Models\AlumniTracking;
 use App\Services\PddiktiService;
+use Maatwebsite\Excel\Facades\Excel;
+use App\Exports\AlumniExport;
 use Illuminate\Http\Request;
 
 class AlumniController extends Controller
@@ -21,27 +23,32 @@ class AlumniController extends Controller
     {
         $query = Alumni::query();
 
-        if ($request->filled('search')) {
-            $query->where('nama', 'like', '%' . $request->search . '%')
-                  ->orWhere('nim', 'like', '%' . $request->search . '%');
-        }
+        $searchNama = $request->search_nama;
+        $searchEmail = $request->search_email;
+        $searchTempatKerja = $request->search_tempat_kerja;
+        $searchPosisi = $request->search_posisi;
 
-        if ($request->filled('tahun_lulus')) {
-            $query->where('tahun_lulus', $request->tahun_lulus);
-        }
+        $query->when($searchNama, function ($q) use ($searchNama) {
+            $q->where('nama', 'like', '%' . $searchNama . '%');
+        })->when($searchEmail, function ($q) use ($searchEmail) {
+            $q->where('email', 'like', '%' . $searchEmail . '%');
+        })->when($searchTempatKerja, function ($q) use ($searchTempatKerja) {
+            $q->where('perusahaan', 'like', '%' . $searchTempatKerja . '%');
+        })->when($searchPosisi, function ($q) use ($searchPosisi) {
+            $q->where('pekerjaan', 'like', '%' . $searchPosisi . '%');
+        });
 
         $alumni = $query->paginate(10);
 
         $stats = [
             'total' => Alumni::count(),
-            'terlacak' => Alumni::whereNotNull('pekerjaan')->orWhere('status_karir', '!=', 'Belum Diketahui')->count(),
-            'bekerja' => Alumni::where('status_karir', 'Bekerja')->count(),
-            'wirausaha' => Alumni::where('status_karir', 'Wirausaha')->count(),
-            'studi_lanjut' => Alumni::where('status_karir', 'Studi Lanjut')->count(),
-            'pddikti_verified' => Alumni::where('pddikti_status', 'verified')->count(),
+            'pns' => Alumni::pns()->count(),
+            'swasta' => Alumni::swasta()->count(),
+            'wirausaha' => Alumni::wirausaha()->count(),
         ];
 
-        return view('admin.alumni.index', compact('alumni', 'stats'));
+        return view('admin.alumni.index', compact('alumni', 'stats', 'searchNama', 'searchEmail', 'searchTempatKerja', 'searchPosisi'));
+
     }
 
     public function create()
@@ -116,6 +123,11 @@ class AlumniController extends Controller
         return redirect()->route('admin.alumni.index')->with('success', 'Alumni deleted successfully.');
     }
 
+    public function export()
+    {
+        return Excel::download(new AlumniExport, 'data_alumni.xlsx');
+    }
+
     public function validatePddikti(Alumni $alumni)
     {
         $result = $this->pddiktiService->validateAlumni($alumni->nim);
@@ -127,4 +139,5 @@ class AlumniController extends Controller
         return redirect()->back()->with('success', $result['message']);
     }
 }
+
 

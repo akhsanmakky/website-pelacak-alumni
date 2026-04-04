@@ -16,7 +16,13 @@ Route::get('/dashboard', [DashboardController::class, 'index'])->name('admin.das
     Route::get('/home', [DashboardController::class, 'index'])->name('home');
     Route::prefix('admin')->name('admin.')->group(function () {
         Route::resource('alumni', AlumniController::class);
-        Route::post('alumni/{alumni}/validate', [AlumniController::class, 'validatePddikti'])->name('admin.alumni.validate');
+        Route::get('alumni/export', [AlumniController::class, 'export'])->name('alumni.export');
+        Route::post('alumni/{alumni}/validate', [AlumniController::class, 'validatePddikti'])->name('alumni.validate');
     });
+    
+    Route::get('/profile/edit', [\App\Http\Controllers\ProfileController::class, 'edit'])->name('profile.edit');
+    Route::put('/profile', [\App\Http\Controllers\ProfileController::class, 'update'])->name('profile.update');
 });
+
+
 

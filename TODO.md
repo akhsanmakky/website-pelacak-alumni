@@ -1,1 +1,11 @@
-# Alumni Tracking - PDDIKTI Validation ✅ COMPLETE\n\n**Features:**\n- 20 alumni Indonesia (2020-2025)\n- Server + Vite assets\n- **PDDIKTI validation:** Button di index/show, status pending/verified/not_found/error\n- API service ready (demo endpoint)\n\n**Test:** Login → /admin/alumni → klik Validasi (lihat success message & badge update)\n\nServer: http://127.0.0.1:8000\nLogin: admin@alumni.com / admin123
+# Task: Use provided data for alumni
+
+## Plan Summary
+Updated AlumniSeeder.php with 32 real records.
+
+## Steps
+- [x] Step 1: Created TODO.md
+- [x] Step 2: Updated database/seeders/AlumniSeeder.php
+- [ ] Step 3: Run `php artisan migrate:fresh --seed`
+- [ ] Step 4: Verify in /admin/alumni
+
