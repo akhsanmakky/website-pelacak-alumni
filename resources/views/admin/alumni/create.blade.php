@@ -1,114 +1,187 @@
-@extends('layouts.app')
+@extends('layouts.admin')
 
 @section('title', 'Tambah Alumni')
 
 @section('content')
-<div class="container-fluid">
-    <div class="row">
-        <div class="col-12">
-            <h1 class="mt-4">Tambah Data Alumni</h1>
+<div data-aos="fade-up">
+    <div class="max-w-4xl mx-auto">
+        <!-- Header -->
+        <div class="mb-12">
+            <div class="flex items-center gap-4 mb-8">
+                <div class="p-4 bg-gradient-to-br from-emerald-500 to-teal-500 text-white rounded-2xl shadow-xl">
+                    <i class="fas fa-user-plus text-2xl"></i>
+                </div>
+                <h1 class="text-4xl font-extrabold bg-gradient-to-r from-gray-900 to-gray-700 dark:from-white dark:to-gray-200 bg-clip-text text-transparent">
+                    Tambah Data Alumni
+                </h1>
+                <p class="text-xl text-gray-600 dark:text-gray-400 mt-2">Isi informasi lengkap alumni baru untuk database Anda</p>
+            </div>
+            <div class="flex gap-4">
+                <a href="{{ route('admin.alumni.index') }}" class="px-8 py-3 bg-gray-200 dark:bg-gray-800 border rounded-2xl font-bold hover:shadow-lg hover:-translate-y-1 transition-all flex items-center">
+                    <i class="fas fa-arrow-left mr-2"></i>Kembali
+                </a>
+            </div>
         </div>
-    </div>
-    <div class="row">
-        <div class="col-lg-8">
-            <div class="card">
-                <div class="card-body">
-                    <form action="{{ route('admin.alumni.store') }}" method="POST">
-                        @csrf
-                        <div class="row">
-                            <div class="col-md-6">
-                                <div class="mb-3">
-                                    <label class="form-label">Nama Alumni</label>
-                                    <input type="text" name="nama" class="form-control @error('nama') is-invalid @enderror" value="{{ old('nama') }}" required>
-                                    @error('nama')
-                                        <div class="invalid-feedback">{{ $message }}</div>
-                                    @enderror
-                                </div>
+
+        <!-- Form Card -->
+        <div class="glass-card rounded-3xl p-12 shadow-2xl" data-aos="zoom-in" data-aos-delay="200">
+            <form action="{{ route('admin.alumni.store') }}" method="POST" class="space-y-8">
+                @csrf
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <!-- Personal Info -->
+                    <div data-aos="fade-right">
+                        <h3 class="text-2xl font-bold mb-8 bg-gradient-to-r from-primary-600 to-indigo-600 bg-clip-text text-transparent border-b border-white/20 pb-4">
+                            Informasi Pribadi
+                        </h3>
+                        
+                        <div class="space-y-6">
+                            <div>
+                                <label class="block text-lg font-bold text-gray-700 dark:text-gray-300 mb-4">Nama Lengkap Alumni *</label>
+                                <input type="text" 
+                                       name="nama" 
+                                       class="w-full input-glass px-6 py-5 rounded-2xl text-xl focus:ring-4 ring-primary-500/30 @error('nama') ring-2 ring-red-500 @enderror" 
+                                       value="{{ old('nama') }}" 
+                                       placeholder="Nama lengkap alumni"
+                                       required>
+                                @error('nama')
+                                    <p class="mt-3 text-red-600 dark:text-red-400 flex items-center font-bold">
+                                        <i class="fas fa-exclamation-circle mr-2"></i>{{ $message }}
+                                    </p>
+                                @enderror
                             </div>
-                            <div class="col-md-6">
-                                <div class="mb-3">
-                                    <label class="form-label">NIM</label>
-                                    <input type="text" name="nim" class="form-control @error('nim') is-invalid @enderror" value="{{ old('nim') }}" required>
-                                    @error('nim')
-                                        <div class="invalid-feedback">{{ $message }}</div>
-                                    @enderror
-                                </div>
+
+                            <div>
+                                <label class="block text-lg font-bold text-gray-700 dark:text-gray-300 mb-4">NIM *</label>
+                                <input type="text" 
+                                       name="nim" 
+                                       class="w-full input-glass px-6 py-5 rounded-2xl text-xl font-mono uppercase focus:ring-4 ring-primary-500/30 @error('nim') ring-2 ring-red-500 @enderror" 
+                                       value="{{ old('nim') }}" 
+                                       placeholder="2021001xxx"
+                                       required>
+                                @error('nim')
+                                    <p class="mt-3 text-red-600 dark:text-red-400 flex items-center font-bold">
+                                        <i class="fas fa-exclamation-circle mr-2"></i>{{ $message }}
+                                    </p>
+                                @enderror
                             </div>
-                            <div class="col-md-6">
-                                <div class="mb-3">
-                                    <label class="form-label">Program Studi</label>
-                                    <input type="text" name="prodi" class="form-control @error('prodi') is-invalid @enderror" value="{{ old('prodi') }}" required>
-                                    @error('prodi')
-                                        <div class="invalid-feedback">{{ $message }}</div>
-                                    @enderror
-                                </div>
+
+                            <div>
+                                <label class="block text-lg font-bold text-gray-700 dark:text-gray-300 mb-4">Program Studi *</label>
+                                <input type="text" 
+                                       name="prodi" 
+                                       class="w-full input-glass px-6 py-5 rounded-2xl text-xl focus:ring-4 ring-primary-500/30 @error('prodi') ring-2 ring-red-500 @enderror" 
+                                       value="{{ old('prodi') }}" 
+                                       placeholder="Teknik Informatika / Manajemen / dll"
+                                       required>
+                                @error('prodi')
+                                    <p class="mt-3 text-red-600 dark:text-red-400 flex items-center font-bold">
+                                        <i class="fas fa-exclamation-circle mr-2"></i>{{ $message }}
+                                    </p>
+                                @enderror
                             </div>
-                            <div class="col-md-6">
-                                <div class="mb-3">
-                                    <label class="form-label">Tahun Lulus</label>
-                                    <input type="number" name="tahun_lulus" class="form-control @error('tahun_lulus') is-invalid @enderror" value="{{ old('tahun_lulus') }}" min="1900" max="2100" required>
-                                    @error('tahun_lulus')
-                                        <div class="invalid-feedback">{{ $message }}</div>
-                                    @enderror
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="mb-3">
-                                    <label class="form-label">Email</label>
-                                    <input type="email" name="email" class="form-control @error('email') is-invalid @enderror" value="{{ old('email') }}" required>
-                                    @error('email')
-                                        <div class="invalid-feedback">{{ $message }}</div>
-                                    @enderror
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="mb-3">
-                                    <label class="form-label">No HP</label>
-                                    <input type="text" name="no_hp" class="form-control @error('no_hp') is-invalid @enderror" value="{{ old('no_hp') }}" required>
-                                    @error('no_hp')
-                                        <div class="invalid-feedback">{{ $message }}</div>
-                                    @enderror
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="mb-3">
-                                    <label class="form-label">Pekerjaan</label>
-                                    <input type="text" name="pekerjaan" class="form-control @error('pekerjaan') is-invalid @enderror" value="{{ old('pekerjaan') }}">
-                                    @error('pekerjaan')
-                                        <div class="invalid-feedback">{{ $message }}</div>
-                                    @enderror
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="mb-3">
-                                    <label class="form-label">Perusahaan</label>
-                                    <input type="text" name="perusahaan" class="form-control @error('perusahaan') is-invalid @enderror" value="{{ old('perusahaan') }}">
-                                    @error('perusahaan')
-                                        <div class="invalid-feedback">{{ $message }}</div>
-                                    @enderror
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="mb-3">
-                                    <label class="form-label">Status Karir</label>
-                                    <select name="status_karir" class="form-select @error('status_karir') is-invalid @enderror" required>
-                                        <option value="">Pilih Status</option>
-                                        <option value="Bekerja" {{ old('status_karir') == 'Bekerja' ? 'selected' : '' }}>Bekerja</option>
-                                        <option value="Wirausaha" {{ old('status_karir') == 'Wirausaha' ? 'selected' : '' }}>Wirausaha</option>
-                                        <option value="Studi Lanjut" {{ old('status_karir') == 'Studi Lanjut' ? 'selected' : '' }}>Studi Lanjut</option>
-                                        <option value="Belum Diketahui" {{ old('status_karir') == 'Belum Diketahui' ? 'selected' : '' }}>Belum Diketahui</option>
-                                    </select>
-                                    @error('status_karir')
-                                        <div class="invalid-feedback">{{ $message }}</div>
-                                    @enderror
-                                </div>
+
+                            <div>
+                                <label class="block text-lg font-bold text-gray-700 dark:text-gray-300 mb-4">Tahun Lulus *</label>
+                                <input type="number" 
+                                       name="tahun_lulus" 
+                                       class="w-full input-glass px-6 py-5 rounded-2xl text-xl focus:ring-4 ring-primary-500/30 @error('tahun_lulus') ring-2 ring-red-500 @enderror" 
+                                       value="{{ old('tahun_lulus') }}" 
+                                       min="1900" 
+                                       max="2100"
+                                       placeholder="2023"
+                                       required>
+                                @error('tahun_lulus')
+                                    <p class="mt-3 text-red-600 dark:text-red-400 flex items-center font-bold">
+                                        <i class="fas fa-exclamation-circle mr-2"></i>{{ $message }}
+                                    </p>
+                                @enderror
                             </div>
                         </div>
-                        <button type="submit" class="btn btn-primary">Simpan</button>
-                        <a href="{{ route('admin.alumni.index') }}" class="btn btn-secondary">Batal</a>
-                    </form>
+                    </div>
+
+                    <!-- Contact & Career -->
+                    <div data-aos="fade-left">
+                        <h3 class="text-2xl font-bold mb-8 bg-gradient-to-r from-primary-600 to-indigo-600 bg-clip-text text-transparent border-b border-white/20 pb-4">
+                            Kontak & Karir
+                        </h3>
+                        
+                        <div class="space-y-6">
+                            <div>
+                                <label class="block text-lg font-bold text-gray-700 dark:text-gray-300 mb-4">Email *</label>
+                                <input type="email" 
+                                       name="email" 
+                                       class="w-full input-glass px-6 py-5 rounded-2xl text-xl focus:ring-4 ring-primary-500/30 @error('email') ring-2 ring-red-500 @enderror" 
+                                       value="{{ old('email') }}" 
+                                       placeholder="alumni@univ.ac.id"
+                                       required>
+                                @error('email')
+                                    <p class="mt-3 text-red-600 dark:text-red-400 flex items-center font-bold">
+                                        <i class="fas fa-exclamation-circle mr-2"></i>{{ $message }}
+                                    </p>
+                                @enderror
+                            </div>
+
+                            <div>
+                                <label class="block text-lg font-bold text-gray-700 dark:text-gray-300 mb-4">No. Handphone *</label>
+                                <input type="tel" 
+                                       name="no_hp" 
+                                       class="w-full input-glass px-6 py-5 rounded-2xl text-xl focus:ring-4 ring-primary-500/30 @error('no_hp') ring-2 ring-red-500 @enderror" 
+                                       value="{{ old('no_hp') }}" 
+                                       placeholder="081234567890"
+                                       required>
+                                @error('no_hp')
+                                    <p class="mt-3 text-red-600 dark:text-red-400 flex items-center font-bold">
+                                        <i class="fas fa-exclamation-circle mr-2"></i>{{ $message }}
+                                    </p>
+                                @enderror
+                            </div>
+
+                            <div>
+                                <label class="block text-lg font-bold text-gray-700 dark:text-gray-300 mb-4">Status Karir *</label>
+                                <select name="status_karir" class="w-full input-glass px-6 py-5 rounded-2xl text-xl focus:ring-4 ring-primary-500/30 @error('status_karir') ring-2 ring-red-500 @enderror" required>
+                                    <option value="">Pilih Status Karir</option>
+                                    <option value="Bekerja" {{ old('status_karir') == 'Bekerja' ? 'selected' : '' }}>🧑‍💼 Bekerja</option>
+                                    <option value="Wirausaha" {{ old('status_karir') == 'Wirausaha' ? 'selected' : '' }}>💡 Wirausaha</option>
+                                    <option value="Studi Lanjut" {{ old('status_karir') == 'Studi Lanjut' ? 'selected' : '' }}>🎓 Studi Lanjut</option>
+                                    <option value="Belum Diketahui" {{ old('status_karir') == 'Belum Diketahui' ? 'selected' : '' }}>❓ Belum Diketahui</option>
+                                </select>
+                                @error('status_karir')
+                                    <p class="mt-3 text-red-600 dark:text-red-400 flex items-center font-bold">
+                                        <i class="fas fa-exclamation-circle mr-2"></i>{{ $message }}
+                                    </p>
+                                @enderror
+                            </div>
+
+                            <div class="md:col-span-2">
+                                <label class="block text-lg font-bold text-gray-700 dark:text-gray-300 mb-4">Jabatan</label>
+                                <input type="text" 
+                                       name="pekerjaan" 
+                                       class="w-full input-glass px-6 py-5 rounded-2xl text-xl focus:ring-4 ring-primary-500/30" 
+                                       value="{{ old('pekerjaan') }}" 
+                                       placeholder="Manager IT / Software Engineer / dll">
+                            </div>
+
+                            <div class="md:col-span-2">
+                                <label class="block text-lg font-bold text-gray-700 dark:text-gray-300 mb-4">Tempat Kerja</label>
+                                <input type="text" 
+                                       name="perusahaan" 
+                                       class="w-full input-glass px-6 py-5 rounded-2xl text-xl focus:ring-4 ring-primary-500/30" 
+                                       value="{{ old('perusahaan') }}" 
+                                       placeholder="PT Telkom Indonesia / Google Indonesia / Startup Anda">
+                            </div>
+                        </div>
+                    </div>
                 </div>
-            </div>
+
+                <div class="flex flex-col sm:flex-row gap-4 pt-12 border-t border-white/20 mt-12">
+                    <button type="submit" class="flex-1 px-12 py-6 bg-gradient-to-r from-emerald-600 to-teal-600 text-white rounded-3xl font-bold text-xl shadow-2xl hover:shadow-3xl hover:-translate-y-2 transition-all">
+                        <i class="fas fa-save mr-3"></i>Simpan Alumni Baru
+                    </button>
+                    <a href="{{ route('admin.alumni.index') }}" class="px-12 py-6 bg-gray-200 dark:bg-gray-800 border rounded-3xl font-bold text-xl hover:shadow-xl hover:-translate-y-1 transition-all flex items-center justify-center">
+                        <i class="fas fa-times mr-3"></i>Batal
+                    </a>
+                </div>
+            </form>
         </div>
     </div>
 </div>

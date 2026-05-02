@@ -9,13 +9,17 @@ Route::get('/', function () {
     return view('welcome');
 });
 
+Route::view('/faq', 'faq');
+
+Route::get('/stats', \App\Http\Controllers\StatsController::class)->name('stats');
+
 Auth::routes();
 
 Route::middleware(['auth'])->group(function () {
 Route::get('/dashboard', [DashboardController::class, 'index'])->name('admin.dashboard');
     Route::get('/home', [DashboardController::class, 'index'])->name('home');
-    Route::prefix('admin')->name('admin.')->group(function () {
-        Route::resource('alumni', AlumniController::class);
+Route::prefix('admin')->name('admin.')->group(function () {
+Route::resource('alumni', AlumniController::class)->parameters(['alumni' => 'alumnus']);
         Route::get('alumni/export', [AlumniController::class, 'export'])->name('alumni.export');
         Route::post('alumni/{alumni}/validate', [AlumniController::class, 'validatePddikti'])->name('alumni.validate');
     });
