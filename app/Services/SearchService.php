@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\Cache;
 
 class SearchService
 {
-    private ?string $apiKey;
+    private string|null $apiKey = null;
     private string $endpoint;
     private int $maxRetries = 3;
     private int $retryDelayMs = 1000;

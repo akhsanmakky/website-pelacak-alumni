@@ -14,11 +14,10 @@ class StatsController extends Controller
     {
         $stats = [
             'total' => Alumni::count(),
-            'pns' => Alumni::pns()->count(),
-            'swasta' => Alumni::swasta()->count(),
+            'bekerja' => Alumni::bekerja()->count(),
             'wirausaha' => Alumni::wirausaha()->count(),
-            'studi_lanjut' => Alumni::where('status_karir', 'Studi Lanjut')->count(),
-            'belum_diketahui' => Alumni::where('status_karir', 'Belum Diketahui')->count(),
+            'studi_lanjut' => Alumni::studiLanjut()->count(),
+            'belum_diketahui' => Alumni::belumDiketahui()->count(),
         ];
 
         return response()->json($stats);

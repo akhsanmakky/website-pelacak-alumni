@@ -35,6 +35,28 @@ class AlumniFactory extends Factory
         $prodiIndex = fake()->numberBetween(0, 2);
         $nim = '20' . $prodiCode[$prodiIndex] . fake()->numberBetween(1001, 1999);
 
+        // Realistic distribution: ~25% no job, 10% studi lanjut, 15% wirausaha, 50% bekerja
+        $status = fake()->randomElement([
+            'Bekerja', 'Bekerja', 'Bekerja', 'Bekerja', 'Bekerja',
+            'Wirausaha', 'Wirausaha', 'Wirausaha',
+            'Studi Lanjut', 'Studi Lanjut',
+            'Belum Diketahui', 'Belum Diketahui', 'Belum Diketahui',
+        ]);
+
+        $pekerjaan = null;
+        $perusahaan = null;
+
+        if ($status === 'Bekerja') {
+            $pekerjaan = fake()->jobTitle();
+            $perusahaan = fake()->company();
+        } elseif ($status === 'Wirausaha') {
+            $pekerjaan = fake()->randomElement(['Owner', 'Founder', 'Pengusaha', 'Freelancer']);
+            $perusahaan = fake()->randomElement(['UD. ' . fake()->lastName(), 'PT ' . fake()->company(), 'Self-Employed']);
+        } elseif ($status === 'Studi Lanjut') {
+            $pekerjaan = fake()->randomElement(['Mahasiswa S2', 'Mahasiswa S3', 'Research Assistant']);
+            $perusahaan = fake()->randomElement(['Universitas Indonesia', 'ITB', 'UGM', 'Universitas Airlangga']);
+        }
+
         return [
             'nama' => $fullName,
             'nim' => $nim,
@@ -42,9 +64,45 @@ class AlumniFactory extends Factory
             'tahun_lulus' => fake()->numberBetween(2020, 2025),
             'email' => fake()->unique()->safeEmail(),
             'no_hp' => '08' . fake()->numerify('#########'),
+            'pekerjaan' => $pekerjaan,
+            'perusahaan' => $perusahaan,
+            'status_karir' => $status,
+        ];
+    }
+
+    /**
+     * State for alumni without a job.
+     */
+    public function unemployed(): static
+    {
+        return $this->state(fn (array $attributes) => [
+            'pekerjaan' => null,
+            'perusahaan' => null,
+            'status_karir' => 'Belum Diketahui',
+        ]);
+    }
+
+    /**
+     * State for alumni currently working.
+     */
+    public function working(): static
+    {
+        return $this->state(fn (array $attributes) => [
             'pekerjaan' => fake()->jobTitle(),
             'perusahaan' => fake()->company(),
-            'status_karir' => fake()->randomElement(['Bekerja', 'Wirausaha', 'Studi Lanjut', 'Belum Diketahui']),
-        ];
+            'status_karir' => 'Bekerja',
+        ]);
+    }
+
+    /**
+     * State for alumni pursuing further studies.
+     */
+    public function studying(): static
+    {
+        return $this->state(fn (array $attributes) => [
+            'pekerjaan' => 'Mahasiswa S2',
+            'perusahaan' => fake()->randomElement(['Universitas Indonesia', 'ITB', 'UGM']),
+            'status_karir' => 'Studi Lanjut',
+        ]);
     }
 }

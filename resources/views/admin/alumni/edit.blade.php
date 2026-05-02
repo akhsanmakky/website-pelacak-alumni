@@ -1,10 +1,10 @@
 @extends('layouts.admin')
 
-@section('title', 'Edit Alumni - {{ $alumni->nama }}')
+@section('title', 'Edit Alumni - ' . $alumni->nama)
 
 @section('content')
 <div data-aos="fade-up">
-    <div class="max-w-4xl mx-auto">
+    <div class="max-w-5xl mx-auto">
         <!-- Header -->
         <div class="mb-12">
             <div class="flex items-center gap-6 mb-8">
@@ -17,7 +17,6 @@
                     </h1>
                     <p class="text-xl text-gray-600 dark:text-gray-400">Update informasi {{ $alumni->nama }} ({{ $alumni->nim }})</p>
                 </div>
-            </div>
             <div class="flex gap-4">
                 <a href="{{ route('admin.alumni.show', $alumni) }}" class="px-8 py-3 bg-gray-200 dark:bg-gray-800 border rounded-2xl font-bold hover:shadow-lg hover:-translate-y-1 transition-all flex items-center">
                     <i class="fas fa-eye mr-2"></i>Lihat Detail
@@ -26,7 +25,6 @@
                     <i class="fas fa-list mr-2"></i>Kembali ke List
                 </a>
             </div>
-        </div>
 
         <!-- Form Card -->
         <div class="glass-card rounded-3xl p-12 shadow-3xl" data-aos="zoom-in" data-aos-delay="200">
@@ -98,13 +96,12 @@
                                     </p>
                                 @enderror
                             </div>
-                        </div>
                     </div>
 
-                    <!-- Contact & Career -->
+                    <!-- Contact -->
                     <div data-aos="fade-left">
                         <h3 class="text-2xl font-bold mb-8 bg-gradient-to-r from-primary-600 to-indigo-600 bg-clip-text text-transparent border-b border-white/20 pb-6">
-                            <i class="fas fa-briefcase mr-3"></i>Kontak & Karir
+                            <i class="fas fa-address-book mr-3"></i>Kontak
                         </h3>
                         
                         <div class="space-y-6">
@@ -140,7 +137,7 @@
                                 <label class="block text-lg font-bold text-gray-700 dark:text-gray-300 mb-4">Status Karir *</label>
                                 <select name="status_karir" class="w-full input-glass px-6 py-5 rounded-2xl text-xl focus:ring-4 ring-primary-500/30 @error('status_karir') ring-2 ring-red-500 @enderror" required>
                                     <option value="">Pilih Status Karir</option>
-                                    <option value="Bekerja" {{ old('status_karir', $alumni->status_karir) == 'Bekerja' ? 'selected' : '' }}>🧑‍💼 Bekerja</option>
+                                    <option value="Bekerja" {{ old('status_karir', $alumni->status_karir) == 'Bekerja' ? 'selected' : '' }}>🏢 Bekerja</option>
                                     <option value="Wirausaha" {{ old('status_karir', $alumni->status_karir) == 'Wirausaha' ? 'selected' : '' }}>💡 Wirausaha</option>
                                     <option value="Studi Lanjut" {{ old('status_karir', $alumni->status_karir) == 'Studi Lanjut' ? 'selected' : '' }}>🎓 Studi Lanjut</option>
                                     <option value="Belum Diketahui" {{ old('status_karir', $alumni->status_karir) == 'Belum Diketahui' ? 'selected' : '' }}>❓ Belum Diketahui</option>
@@ -151,26 +148,99 @@
                                     </p>
                                 @enderror
                             </div>
-
-                            <div class="md:col-span-2">
-                                <label class="block text-lg font-bold text-gray-700 dark:text-gray-300 mb-4">Jabatan</label>
-                                <input type="text" 
-                                       name="pekerjaan" 
-                                       class="w-full input-glass px-6 py-5 rounded-2xl text-xl focus:ring-4 ring-primary-500/30" 
-                                       value="{{ old('pekerjaan', $alumni->pekerjaan) }}" 
-                                       placeholder="Manager IT / Software Engineer">
-                            </div>
-
-                            <div class="md:col-span-2">
-                                <label class="block text-lg font-bold text-gray-700 dark:text-gray-300 mb-4">Tempat Kerja</label>
-                                <input type="text" 
-                                       name="perusahaan" 
-                                       class="w-full input-glass px-6 py-5 rounded-2xl text-xl focus:ring-4 ring-primary-500/30" 
-                                       value="{{ old('perusahaan', $alumni->perusahaan) }}" 
-                                       placeholder="PT Telkom / Google Indonesia">
-                            </div>
-                        </div>
                     </div>
+
+                <!-- Career Details -->
+                <div class="border-t border-white/20 pt-8 mt-8">
+                    <h3 class="text-2xl font-bold mb-8 bg-gradient-to-r from-primary-600 to-indigo-600 bg-clip-text text-transparent">
+                        <i class="fas fa-briefcase mr-3"></i>Detail Pekerjaan
+                    </h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                        <div>
+                            <label class="block text-lg font-bold text-gray-700 dark:text-gray-300 mb-4">Jabatan / Posisi</label>
+                            <input type="text" 
+                                   name="pekerjaan" 
+                                   class="w-full input-glass px-6 py-5 rounded-2xl text-xl focus:ring-4 ring-primary-500/30" 
+                                   value="{{ old('pekerjaan', $alumni->pekerjaan) }}" 
+                                   placeholder="Manager IT / Software Engineer">
+                        </div>
+
+                        <div>
+                            <label class="block text-lg font-bold text-gray-700 dark:text-gray-300 mb-4">Tempat Kerja / Perusahaan</label>
+                            <input type="text" 
+                                   name="perusahaan" 
+                                   class="w-full input-glass px-6 py-5 rounded-2xl text-xl focus:ring-4 ring-primary-500/30" 
+                                   value="{{ old('perusahaan', $alumni->perusahaan) }}" 
+                                   placeholder="PT Telkom / Google Indonesia">
+                        </div>
+
+                        <div class="md:col-span-2">
+                            <label class="block text-lg font-bold text-gray-700 dark:text-gray-300 mb-4">Alamat Tempat Bekerja</label>
+                            <textarea name="alamat_bekerja" 
+                                      class="w-full input-glass px-6 py-5 rounded-2xl text-xl focus:ring-4 ring-primary-500/30" 
+                                      rows="3"
+                                      placeholder="Jl. Sudirman No. 1, Jakarta Pusat">{{ old('alamat_bekerja', $alumni->alamat_bekerja) }}</textarea>
+                        </div>
+
+                        <div>
+                            <label class="block text-lg font-bold text-gray-700 dark:text-gray-300 mb-4">Sosial Media Perusahaan</label>
+                            <input type="url" 
+                                   name="company_social" 
+                                   class="w-full input-glass px-6 py-5 rounded-2xl text-xl focus:ring-4 ring-primary-500/30" 
+                                   value="{{ old('company_social', $alumni->company_social) }}" 
+                                   placeholder="https://linkedin.com/company/...">
+                        </div>
+                </div>
+
+                <!-- Social Media -->
+                <div class="border-t border-white/20 pt-8 mt-8">
+                    <h3 class="text-2xl font-bold mb-8 bg-gradient-to-r from-primary-600 to-indigo-600 bg-clip-text text-transparent">
+                        <i class="fas fa-share-alt mr-3"></i>Media Sosial Alumni
+                    </h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                        <div>
+                            <label class="block text-lg font-bold text-gray-700 dark:text-gray-300 mb-4">
+                                <i class="fab fa-linkedin text-blue-600 mr-2"></i>LinkedIn
+                            </label>
+                            <input type="url" 
+                                   name="linkedin" 
+                                   class="w-full input-glass px-6 py-5 rounded-2xl text-xl focus:ring-4 ring-primary-500/30" 
+                                   value="{{ old('linkedin', $alumni->linkedin) }}" 
+                                   placeholder="https://linkedin.com/in/username">
+                        </div>
+
+                        <div>
+                            <label class="block text-lg font-bold text-gray-700 dark:text-gray-300 mb-4">
+                                <i class="fab fa-instagram text-pink-600 mr-2"></i>Instagram
+                            </label>
+                            <input type="url" 
+                                   name="instagram" 
+                                   class="w-full input-glass px-6 py-5 rounded-2xl text-xl focus:ring-4 ring-primary-500/30" 
+                                   value="{{ old('instagram', $alumni->instagram) }}" 
+                                   placeholder="https://instagram.com/username">
+                        </div>
+
+                        <div>
+                            <label class="block text-lg font-bold text-gray-700 dark:text-gray-300 mb-4">
+                                <i class="fab fa-facebook text-blue-700 mr-2"></i>Facebook
+                            </label>
+                            <input type="url" 
+                                   name="facebook" 
+                                   class="w-full input-glass px-6 py-5 rounded-2xl text-xl focus:ring-4 ring-primary-500/30" 
+                                   value="{{ old('facebook', $alumni->facebook) }}" 
+                                   placeholder="https://facebook.com/username">
+                        </div>
+
+                        <div>
+                            <label class="block text-lg font-bold text-gray-700 dark:text-gray-300 mb-4">
+                                <i class="fab fa-tiktok text-black dark:text-white mr-2"></i>TikTok
+                            </label>
+                            <input type="url" 
+                                   name="tiktok" 
+                                   class="w-full input-glass px-6 py-5 rounded-2xl text-xl focus:ring-4 ring-primary-500/30" 
+                                   value="{{ old('tiktok', $alumni->tiktok) }}" 
+                                   placeholder="https://tiktok.com/@username">
+                        </div>
                 </div>
 
                 <div class="flex flex-col sm:flex-row gap-6 pt-12 border-t border-white/20 mt-12">
@@ -185,9 +255,7 @@
                             <i class="fas fa-list mr-3"></i>Kembali ke List
                         </a>
                     </div>
-                </div>
             </form>
         </div>
-    </div>
 </div>
 @endsection
