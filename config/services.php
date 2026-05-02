@@ -14,6 +14,14 @@ return [
     |
     */
 
+'serper' => [
+        'api_key' => env('SERPER_API_KEY'),
+        'endpoint' => env('SERPER_ENDPOINT', 'https://google.serper.dev/search'),
+        // Rate limiting - limits untuk mencegah exceed quota
+        'daily_limit' => env('SERPER_DAILY_LIMIT', 100),     // Max 100/hari (free tier: 2500/bulan)
+        'monthly_limit' => env('SERPER_MONTHLY_LIMIT', 2000),  // Max 2000/bulan (safety margin)
+    ],
+
     'mailgun' => [
         'domain' => env('MAILGUN_DOMAIN'),
         'secret' => env('MAILGUN_SECRET'),

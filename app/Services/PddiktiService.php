@@ -2,46 +2,80 @@
 
 namespace App\Services;
 
-use Illuminate\Support\Facades\Http;
-use Illuminate\Support\Facades\Log;
-
 class PddiktiService
 {
-    private $baseUrl = 'https://api.data.utdi.kemdikbud.go.id'; // Contoh endpoint PDDIKTI
+    protected string $baseUrl = 'https://pddikti.fastapicloud.dev/api';
+    protected string $universitas = 'Universitas Muhammadiyah Malang';
 
-    public function validateAlumni($nim)
+    public function validateAlumni(string $nama, string $nim): array
     {
         try {
-            $response = Http::timeout(10)->get("{$this->baseUrl}/v2/mahasiswa/nim/{$nim}");
+            $query = urlencode("{$nama} {$this->universitas}");
+            $url   = "{$this->baseUrl}/search/mhs/{$query}/";
 
-            if ($response->successful()) {
-                $data = $response->json();
-                
-                // Assume response structure: nama, prodi, tahun_lulus etc.
+            $ch = curl_init($url);
+            curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'GET');
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+            curl_setopt($ch, CURLOPT_TIMEOUT, 10);
+            curl_setopt($ch, CURLOPT_HTTPHEADER, ['accept: application/json']);
+
+            $response  = curl_exec($ch);
+            $httpCode  = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+            $curlError = curl_error($ch);
+            curl_close($ch);
+
+            if ($curlError) {
                 return [
-                    'status' => 'verified',
-                    'data' => $data,
-                    'message' => 'Alumni verified from PDDIKTI.'
-                ];
-            } elseif ($response->status() == 404) {
-                return [
-                    'status' => 'not_found',
-                    'data' => null,
-                    'message' => 'NIM not found in PDDIKTI.'
-                ];
-            } else {
-                return [
-                    'status' => 'error',
-                    'data' => null,
-                    'message' => 'API error: ' . $response->status()
+                    'status'  => 'timeout',
+                    'message' => 'Koneksi ke PDDIKTI gagal: ' . $curlError,
                 ];
             }
-        } catch (\Exception $e) {
-            Log::error('PDDIKTI API error: ' . $e->getMessage());
+
+            if ($httpCode !== 200) {
+                return [
+                    'status'  => 'api_error',
+                    'message' => "PDDIKTI mengembalikan HTTP {$httpCode}.",
+                ];
+            }
+
+            $data = json_decode($response, true);
+
+            // ✅ Response adalah array langsung, bukan { mahasiswa: [...] }
+            $mahasiswaList = is_array($data) ? $data : [];
+
+            if (empty($mahasiswaList)) {
+                return [
+                    'status'  => 'not_found',
+                    'message' => "Alumni dengan nama \"{$nama}\" tidak ditemukan di PDDIKTI.",
+                ];
+            }
+
+            // ✅ Cocokkan NIM — key: "nim", pastikan UMM
+            foreach ($mahasiswaList as $mhs) {
+                $nimPddikti  = strtolower(trim($mhs['nim'] ?? ''));
+                $namaPt      = strtolower(trim($mhs['nama_pt'] ?? ''));
+
+                $isUmm       = str_contains($namaPt, 'muhammadiyah malang');
+                $nimCocok    = $nimPddikti === strtolower(trim($nim));
+
+                if ($isUmm && $nimCocok) {
+                    return [
+                        'status'  => 'verified',
+                        'message' => "Alumni \"{$mhs['nama']}\" ({$mhs['nama_prodi']}) berhasil diverifikasi di PDDIKTI.",
+                    ];
+                }
+            }
+
+            // Nama ditemukan tapi NIM / PT tidak cocok
             return [
-                'status' => 'error',
-                'data' => null,
-                'message' => 'Connection error.'
+                'status'  => 'not_found',
+                'message' => "Nama \"{$nama}\" ditemukan di PDDIKTI, namun NIM atau universitas tidak cocok.",
+            ];
+
+        } catch (\Throwable $e) {
+            return [
+                'status'  => 'error',
+                'message' => 'Terjadi kesalahan: ' . $e->getMessage(),
             ];
         }
     }

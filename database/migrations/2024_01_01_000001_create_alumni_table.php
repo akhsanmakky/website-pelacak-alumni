@@ -18,7 +18,7 @@ return new class extends Migration
             $table->string('prodi');
             $table->year('tahun_lulus');
             $table->string('email')->unique();
-            $table->string('no_hp');
+            $table->string('no_hp')->nullable();
             $table->string('pekerjaan')->nullable();
             $table->string('perusahaan')->nullable();
             $table->enum('status_karir', ['Bekerja', 'Wirausaha', 'Studi Lanjut', 'Belum Diketahui'])->default('Belum Diketahui');

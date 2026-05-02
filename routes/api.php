@@ -17,3 +17,8 @@ use Illuminate\Support\Facades\Route;
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
+
+Route::apiResource('alumni', \App\Http\Controllers\Api\AlumniController::class);
+
+Route::post('/tracking/run', [\App\Http\Controllers\Api\TrackingController::class, 'run']);
+Route::get('/tracking/result/{alumni_id}', [\App\Http\Controllers\Api\TrackingController::class, 'result']);
